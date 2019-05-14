@@ -113,7 +113,7 @@ int delete_tree(Node * input){
 int print_tree2(Node * input){
     std::vector< Node * > one;
     std::vector< Node * > two;
-    int hmax = 4, width = (1 << hmax) - hmax;
+    int hmax = 6, width = (1 << hmax) - hmax;
     one.push_back(input);
     for(int level = 0; level < hmax; level++){
         std::string filler(width - 1, ' ');
@@ -140,7 +140,20 @@ int print_tree2(Node * input){
     }
     return 0;
 }
-
+int print_function(Node * input){
+    if(input -> get_left() != NULL){
+        std::cout << "(";
+        print_function(input -> get_left());
+        std::cout << ")";
+    }
+    input -> print();
+    if(input -> get_right() != NULL){
+        std::cout << "(";
+        print_function(input -> get_right());
+        std::cout << ")";
+    }
+    return 0;
+}
 
 int main(){
     std::vector<std::string> list;
@@ -152,8 +165,12 @@ int main(){
     int count = 0;
     Node * tree = build_tree(list, count);
     std::cout << "good build" << std::endl;
-    print_tree2(tree);
+    print_function(tree);
     std::cout << "good print" << std::endl;
+    Node * cop = tree -> diff();
+    print_function(cop);
+
+    delete_tree(cop);
     delete_tree(tree);
     return 0;
 }
