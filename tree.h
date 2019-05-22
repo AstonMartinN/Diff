@@ -238,19 +238,19 @@ double Div::get_value(double point){
 
 ////////////////////////////////////////////////////*****************
 double Sin::get_value_dif(double point){
-	return cos(point) * (get_right() -> get_value_dif(point));
+	return cos(get_right() -> get_value(point)) * (get_right() -> get_value_dif(point));
 }
 double Cos::get_value_dif(double point){
-    return -1 * sin(point) * (get_right() -> get_value_dif(point));
+    return sin( 0 - get_right() -> get_value(point)) * (get_right() -> get_value_dif(point));
 }
 double Ln::get_value_dif(double point){
-    return (1 / point) * (get_right() -> get_value_dif(point));
+    return (1 / get_right() -> get_value(point)) * (get_right() -> get_value_dif(point));
 }
 double Exp::get_value_dif(double point){
-    return exp(point) * (get_right() -> get_value_dif(point));
+    return exp(get_right() -> get_value(point)) * (get_right() -> get_value_dif(point));
 }
 double Sqrt::get_value_dif(double point){
-    return (1 / (2*sqrt(point))) * (get_right() -> get_value_dif(point));
+    return (1 / (2*sqrt(get_right() -> get_value(point)))) * (get_right() -> get_value_dif(point));
 }
 double Const::get_value_dif(double point){
     return 0;
@@ -353,14 +353,9 @@ Node * Div::copy(){
 		tmp -> set_right(get_right() -> copy());
 	return tmp;
 }
-
-
-
-
 Node * Const::diff(){
     return new Const(0);
 }
-
 Node * Sin::diff(){
 	Node * tmp = new Mult();
 	Node * tmp2 = new Cos();
@@ -371,8 +366,6 @@ Node * Sin::diff(){
 		tmp -> set_right(get_right() -> diff());
 	return tmp;
 }
-
-
 Node * Cos::diff(){
 	Node * tmp = new Mult();
 	Node * tmp2 = new Sin();
@@ -387,7 +380,6 @@ Node * Cos::diff(){
 		tmp -> set_right(get_right() -> diff());
 	return tmp;
 }
-
 Node * Ln::diff(){
 	Node * tmp = new Div();
 	tmp -> set_left(new Const(1));
@@ -399,7 +391,6 @@ Node * Ln::diff(){
 		mul -> set_right(get_right() -> diff());
 	return mul;
 }
-
 Node * Exp::diff(){
 	Node * tmp = new Mult();
 	if(get_right() != NULL)
@@ -407,7 +398,6 @@ Node * Exp::diff(){
 	tmp -> set_left(copy());
 	return tmp;
 }
-
 Node * Sqrt::diff(){
     Node * div = new Div();
     Node * mult = new Mult();

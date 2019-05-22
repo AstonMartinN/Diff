@@ -15,6 +15,7 @@ int main(int argv, char * *argc){
         std::cout << list[i] << " ";
     }
     std::cout << std::endl;
+	int count = 0;
     Node * tree = build_tree(list, count);
     std::cout << "good build" << std::endl;
     print_function(tree);
