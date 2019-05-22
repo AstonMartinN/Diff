@@ -27,6 +27,9 @@ public:
     
     virtual Node * copy(){};
     virtual Node * diff(){};
+	virtual double get_value(double point){};
+	virtual double get_value_dif(double point){};
+	
 };
 
 class Operator:public Node{
@@ -43,6 +46,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Cos:public Operator{
 public:
@@ -50,6 +55,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Ln:public Operator{
 public:
@@ -57,6 +64,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Exp:public Operator{
 public:
@@ -64,6 +73,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Sqrt:public Operator{
 public:
@@ -71,6 +82,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Plus:public Operator{
 public:
@@ -78,6 +91,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Minus:public Operator{
 public:
@@ -85,6 +100,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Mult:public Operator{
 public:
@@ -92,6 +109,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Div:public Operator{
 public:
@@ -99,6 +118,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 
 class Const:public Term{
@@ -110,6 +131,8 @@ public:
     virtual int print();
     virtual Node * diff();
     virtual Node * copy();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 class Var:public Term{
 	std::string name;
@@ -120,6 +143,8 @@ public:
     virtual int print();
     virtual Node * copy();
     virtual Node * diff();
+	virtual double get_value(double point);
+	virtual double get_value_dif(double point);
 };
 
 Node * Const::copy(){
@@ -174,18 +199,79 @@ int Div::print(){
     std::cout << "/" ;//<< std::endl;
     return 0;
 }
-/*
 
-Node * Var::diff(){
-    return new Const(1);
-} 
-Node * Sin::diff(){
-    Node * tmp = new Cos();
-    Cos -> set_right(right -> copy())
-    Node * tmp2 = new Mult();
-    tmp2 -> set_left(tmp);
-    tmp2 -> set_right(right -> diff());
-}*/
+
+double Sin::get_value(double point){
+	return sin(point);
+}
+double Cos::get_value(double point){
+    return cos(point);
+}
+double Ln::get_value(double point){
+    return log(point);
+}
+double Exp::get_value(double point){
+    return exp(point);
+}
+double Sqrt::get_value(double point){
+    return sqrt(point);
+}
+double Const::get_value(double point){
+    return value;
+}
+double Var::get_value(double point){
+    return point;
+}
+double Plus::get_value(double point){
+    return get_left() -> get_value(point) + get_right() -> get_value(point) ;
+}
+double Minus::get_value(double point){
+    return get_left() -> get_value(point) - get_right() -> get_value(point);
+}
+double Mult::get_value(double point){
+    return get_left() -> get_value(point) * get_right() -> get_value(point);
+}
+double Div::get_value(double point){
+    return get_left() -> get_value(point) / get_right() -> get_value(point);
+}
+
+
+////////////////////////////////////////////////////*****************
+double Sin::get_value_dif(double point){
+	return cos(point) * (get_right() -> get_value_dif(point));
+}
+double Cos::get_value_dif(double point){
+    return -1 * sin(point) * (get_right() -> get_value_dif(point));
+}
+double Ln::get_value_dif(double point){
+    return (1 / point) * (get_right() -> get_value_dif(point));
+}
+double Exp::get_value_dif(double point){
+    return exp(point) * (get_right() -> get_value_dif(point));
+}
+double Sqrt::get_value_dif(double point){
+    return (1 / (2*sqrt(point))) * (get_right() -> get_value_dif(point));
+}
+double Const::get_value_dif(double point){
+    return 0;
+}
+double Var::get_value_dif(double point){
+    return 1;
+}
+double Plus::get_value_dif(double point){
+    return get_left() -> get_value_dif(point) + get_right() -> get_value_dif(point) ;
+}
+double Minus::get_value_dif(double point){
+    return get_left() -> get_value_dif(point) - get_right() -> get_value_dif(point);
+}
+double Mult::get_value_dif(double point){
+    return  (get_left() -> get_value_dif(point) * get_right() -> get_value(point) ) + (get_left() -> get_value(point) * get_right() -> get_value_dif(point));
+}
+double Div::get_value_dif(double point){
+    double tmp = (get_left() -> get_value_dif(point) * get_right() -> get_value(point) ) - (get_left() -> get_value(point) * get_right() -> get_value_dif(point));
+	return tmp / (get_right() -> get_value(point) * get_right() -> get_value(point) );
+}
+////////////////////////////////////////////////////////////////
 
 Node * Sin::copy(){
 	Node * tmp = new Sin();
@@ -302,9 +388,6 @@ Node * Cos::diff(){
 	return tmp;
 }
 
-
-
-
 Node * Ln::diff(){
 	Node * tmp = new Div();
 	tmp -> set_left(new Const(1));
@@ -387,5 +470,157 @@ Node * Div::diff(){
     div -> set_right(mult3);
     return div;
 }
+
+
+std::vector<std::string> parse(){
+    std::string str;
+    std::getline(std::cin, str);
+    std::vector<std::string> list;
+    std::string tmp;
+    for(int i = 0; i <= str.size(); i++){
+        if(str[i] == ' ' || i == str.size()){
+            if(tmp.size() != 0){
+                list.push_back(tmp);
+            }
+            tmp = "";
+            continue;
+        }else{
+            tmp += str[i];
+        }
+    }
+    return list;
+}
+
+Node * isfunction(std::string lexem){
+    if(lexem == "sin")
+        return new Sin();
+    if(lexem == "cos")
+        return new Cos();
+    if(lexem == "ln")
+        return new Ln();
+    if(lexem == "sqrt")
+        return new Sqrt();
+    if(lexem == "exp")
+        return new Exp();
+    return NULL;
+}
+
+Node * isoper(std::string lexem){
+    if(lexem == "+")
+        return new Plus();
+    if(lexem == "-")
+        return new Minus();
+    if(lexem == "*")
+        return new Mult();
+    if(lexem == "/")
+        return new Div();
+    return NULL;
+}
+
+Node * isterm(std::string lexem){
+    int num = atoi(lexem.data());
+    if(num != 0)
+        return new Const(num);
+    else
+        return new Var(lexem);
+    return NULL;
+}
+
+Node * build_tree(std::vector<std::string> input, int &count){
+    if(count >= input.size())
+        return NULL;
+    Node * tmp;
+    if(input[count] == "("){
+        count++;
+        Node * left = build_tree(input, count);
+        if(input[++count] == ")") // count = count + 1
+            return left;
+        tmp = isoper(input[count]);
+        count++;
+        Node * right = build_tree(input, count);
+        if(input[++count] != ")"){
+            std::cout << "ERROR )" << std::endl;
+            return 0;
+        }
+        tmp -> set_left(left);
+        tmp -> set_right(right);
+        return tmp;
+    }
+    //tmp = isoper(input[count]);
+    //if(tmp != NULL)
+    //    return tmp;
+    tmp = isfunction(input[count]);
+    if(tmp != NULL){
+        Node * right = build_tree(input, ++count);
+        tmp -> set_right(right);
+        return tmp;
+    }
+    tmp = isterm(input[count]);
+    return tmp;
+}
+
+int print_tree(Node * input){
+    if(input == NULL)
+        return 0;
+    print_tree(input -> get_left());
+            input -> print();
+    print_tree(input -> get_right());
+    return 0;
+}
+
+int delete_tree(Node * input){
+    if(input == NULL)
+        return 0;
+    delete_tree(input -> get_left());
+    delete_tree(input -> get_right());
+    delete input;
+    return 0;
+}
+
+int print_tree2(Node * input){
+    std::vector< Node * > one;
+    std::vector< Node * > two;
+    int hmax = 6, width = (1 << hmax) - hmax;
+    one.push_back(input);
+    for(int level = 0; level < hmax; level++){
+        std::string filler(width - 1, ' ');
+        for(int i = 0; i < one.size() ; i++){
+            Node * elem = one[i];
+            if(elem != NULL){
+                std::cout << filler;
+                elem -> print();
+                std::cout << filler;
+                two.push_back(elem -> get_left());
+                two.push_back(elem -> get_right());
+            } else {
+                std::cout << filler << "(--)" << filler;
+                two.push_back(NULL);
+                two.push_back(NULL);
+            }
+        }
+        std::cout << std::endl;
+        std::cout << "-------------------------------------------------" << std::endl;
+        std::cout << std::endl;
+        one = two;
+        two.clear();
+        width /= 2;
+    }
+    return 0;
+}
+int print_function(Node * input){
+    if(input -> get_left() != NULL){
+        std::cout << "(";
+        print_function(input -> get_left());
+        std::cout << ")";
+    }
+    input -> print();
+    if(input -> get_right() != NULL){
+        std::cout << "(";
+        print_function(input -> get_right());
+        std::cout << ")";
+    }
+    return 0;
+}
+
 #endif
 
