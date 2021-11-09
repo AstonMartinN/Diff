@@ -10,6 +10,3 @@
 function design rules:  
 * functions: sin x, cos x, ln x, exp x, sqrt x, x;  
 * function construction rules: all binary operations must be with parentheses;  
-___
-## Examples:
-
